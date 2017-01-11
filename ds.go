@@ -48,12 +48,27 @@ func (k Key) Equal(key Key) bool {
 	if k.Namespace != key.Namespace {
 		return false
 	}
+	if len(k.Path) != len(key.Path) {
+		return false
+	}
 	for i, p := range k.Path {
 		if p != key.Path[i] {
 			return false
 		}
 	}
 	return true
+}
+
+func (k Key) Copy() Key {
+	path := make([]struct {
+		Kind string
+		ID   interface{}
+	}, len(k.Path))
+	copy(path, k.Path)
+	return Key{
+		Namespace: k.Namespace,
+		Path:      path,
+	}
 }
 
 type Ds interface {
